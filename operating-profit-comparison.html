@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>다원산업 · 삼성전자 영업이익 3개년 비교</title>
+  <meta name="description" content="다원산업과 삼성전자의 2023~2025년 영업이익 비교 화면">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23143b3a'/%3E%3Cpath d='M14 45h36v5H14z' fill='%23f4d35e'/%3E%3Cpath d='M18 38h8V20h-8zM30 38h8V12h-8zM42 38h8V27h-8z' fill='%23ffffff'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #15201f;
+      --muted: #65706f;
+      --line: #dbe2df;
+      --surface: #ffffff;
+      --canvas: #f6f8f7;
+      --teal: #0f766e;
+      --teal-dark: #134e4a;
+      --blue: #2563eb;
+      --amber: #d88a12;
+      --rose: #c2415d;
+      --shadow: 0 18px 45px rgba(21, 32, 31, 0.09);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, rgba(15, 118, 110, 0.09), rgba(37, 99, 235, 0) 360px),
+        var(--canvas);
+    }
+
+    main {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 32px 0 48px;
+    }
+
+    header {
+      display: grid;
+      gap: 18px;
+      padding: 28px 0 22px;
+      border-bottom: 1px solid rgba(21, 32, 31, 0.12);
+    }
+
+    .eyebrow {
+      margin: 0;
+      color: var(--teal-dark);
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 760px;
+      font-size: clamp(2rem, 4vw, 4.1rem);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      margin: 0;
+      max-width: 780px;
+      color: var(--muted);
+      font-size: 1.08rem;
+      line-height: 1.75;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .metric {
+      min-height: 132px;
+      padding: 18px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 10px;
+      font-size: clamp(1.65rem, 3vw, 2.35rem);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .metric p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 0.95rem;
+    }
+
+    section {
+      margin-top: 28px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 12px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 1.25rem;
+      line-height: 1.25;
+    }
+
+    .unit {
+      color: var(--muted);
+      font-size: 0.92rem;
+      white-space: nowrap;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    table {
+      width: 100%;
+      min-width: 720px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 17px 18px;
+      border-bottom: 1px solid var(--line);
+      text-align: right;
+      white-space: nowrap;
+      font-size: 1rem;
+    }
+
+    th {
+      color: #364342;
+      background: #eef4f2;
+      font-size: 0.9rem;
+      font-weight: 800;
+    }
+
+    th:first-child,
+    td:first-child {
+      text-align: left;
+      position: sticky;
+      left: 0;
+      background: inherit;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    tbody tr:nth-child(2) {
+      background: #fbfcff;
+    }
+
+    .ratio-row {
+      font-weight: 800;
+      color: var(--teal-dark);
+      background: #f7fbfa;
+    }
+
+    .bars {
+      display: grid;
+      gap: 14px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr);
+      gap: 16px;
+      align-items: center;
+      min-height: 78px;
+    }
+
+    .year {
+      font-weight: 800;
+      color: #293635;
+    }
+
+    .bar-pair {
+      display: grid;
+      gap: 10px;
+    }
+
+    .bar-line {
+      display: grid;
+      grid-template-columns: 120px minmax(120px, 1fr) 148px;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .company {
+      color: #364342;
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .track {
+      height: 16px;
+      overflow: hidden;
+      background: #e7ecea;
+      border-radius: 999px;
+    }
+
+    .fill {
+      height: 100%;
+      min-width: 8px;
+      border-radius: inherit;
+    }
+
+    .fill.dawon {
+      background: linear-gradient(90deg, var(--amber), #f0b33c);
+    }
+
+    .fill.samsung {
+      background: linear-gradient(90deg, var(--blue), #6ea2ff);
+    }
+
+    .value {
+      color: #293635;
+      font-size: 0.95rem;
+      font-weight: 800;
+      text-align: right;
+    }
+
+    .insights {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .note {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      line-height: 1.7;
+      box-shadow: var(--shadow);
+    }
+
+    .note strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--teal-dark);
+    }
+
+    .note p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    footer {
+      margin-top: 28px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.65;
+    }
+
+    @media (max-width: 820px) {
+      main {
+        width: min(100% - 24px, 1160px);
+        padding-top: 22px;
+      }
+
+      .summary-grid,
+      .insights {
+        grid-template-columns: 1fr;
+      }
+
+      .bar-row,
+      .bar-line {
+        grid-template-columns: 1fr;
+      }
+
+      .value {
+        text-align: left;
+      }
+
+      .section-title {
+        display: block;
+      }
+
+      .unit {
+        display: block;
+        margin-top: 6px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <p class="eyebrow">영업이익 3개년 비교</p>
+      <h1>다원산업과 삼성전자, 규모와 흐름을 한 화면에서 봅니다.</h1>
+      <p class="lead">
+        2023~2025년 공시 기준 영업이익입니다. 삼성전자는 연결 재무제표 기준,
+        다원산업은 감사보고서의 개별 재무제표 기준으로 정리했습니다.
+      </p>
+    </header>
+
+    <section class="summary-grid" aria-label="핵심 요약">
+      <article class="metric">
+        <span>2025년 다원산업</span>
+        <strong>17.4억</strong>
+        <p>2024년 18.8억에서 7.8% 감소했습니다.</p>
+      </article>
+      <article class="metric">
+        <span>2025년 삼성전자</span>
+        <strong>436,010.5억</strong>
+        <p>2024년 327,259.6억에서 33.2% 증가했습니다.</p>
+      </article>
+      <article class="metric">
+        <span>2025년 규모 차이</span>
+        <strong>약 25,101배</strong>
+        <p>두 회사의 절대금액 차이는 3년 동안 확대됐습니다.</p>
+      </article>
+    </section>
+
+    <section aria-labelledby="comparison-table-title">
+      <div class="section-title">
+        <h2 id="comparison-table-title">비교표</h2>
+        <span class="unit">단위: 억원</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">구분</th>
+              <th scope="col">2023</th>
+              <th scope="col">2024</th>
+              <th scope="col">2025</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>다원산업</td>
+              <td>9.2억</td>
+              <td>18.8억</td>
+              <td>17.4억</td>
+            </tr>
+            <tr>
+              <td>삼성전자</td>
+              <td>65,669.8억</td>
+              <td>327,259.6억</td>
+              <td>436,010.5억</td>
+            </tr>
+            <tr class="ratio-row">
+              <td>삼성전자 / 다원산업</td>
+              <td>약 7,113배</td>
+              <td>약 17,372배</td>
+              <td>약 25,101배</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section aria-labelledby="bar-title">
+      <div class="section-title">
+        <h2 id="bar-title">상대 규모</h2>
+        <span class="unit">로그형 상대 길이</span>
+      </div>
+      <div class="bars">
+        <div class="bar-row">
+          <div class="year">2023</div>
+          <div class="bar-pair">
+            <div class="bar-line">
+              <div class="company">다원산업</div>
+              <div class="track"><div class="fill dawon" style="width: 20%;"></div></div>
+              <div class="value">9.2억</div>
+            </div>
+            <div class="bar-line">
+              <div class="company">삼성전자</div>
+              <div class="track"><div class="fill samsung" style="width: 77%;"></div></div>
+              <div class="value">65,669.8억</div>
+            </div>
+          </div>
+        </div>
+        <div class="bar-row">
+          <div class="year">2024</div>
+          <div class="bar-pair">
+            <div class="bar-line">
+              <div class="company">다원산업</div>
+              <div class="track"><div class="fill dawon" style="width: 28%;"></div></div>
+              <div class="value">18.8억</div>
+            </div>
+            <div class="bar-line">
+              <div class="company">삼성전자</div>
+              <div class="track"><div class="fill samsung" style="width: 95%;"></div></div>
+              <div class="value">327,259.6억</div>
+            </div>
+          </div>
+        </div>
+        <div class="bar-row">
+          <div class="year">2025</div>
+          <div class="bar-pair">
+            <div class="bar-line">
+              <div class="company">다원산업</div>
+              <div class="track"><div class="fill dawon" style="width: 27%;"></div></div>
+              <div class="value">17.4억</div>
+            </div>
+            <div class="bar-line">
+              <div class="company">삼성전자</div>
+              <div class="track"><div class="fill samsung" style="width: 100%;"></div></div>
+              <div class="value">436,010.5억</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="insights" aria-label="해석">
+      <article class="note">
+        <strong>다원산업</strong>
+        <p>2024년에 영업이익이 두 배 이상 증가한 뒤 2025년에 소폭 조정됐습니다.</p>
+      </article>
+      <article class="note">
+        <strong>삼성전자</strong>
+        <p>2023년 저점 이후 2024년과 2025년에 큰 폭으로 회복했습니다.</p>
+      </article>
+    </section>
+
+    <footer>
+      출처: DART 공시. 다원산업 2023년 수치는 2024년 감사보고서 비교 재무제표 기준이며,
+      해당 비교 재무제표에는 감사받지 아니한 재무제표 표시가 있습니다.
+    </footer>
+  </main>
+</body>
+</html>
+
